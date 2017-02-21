@@ -1,7 +1,7 @@
 {
-  "name": "js-cookie-editor",
+  "name": "abba-bookmarklet",
   "version": "1.0.0",
-  "description": "Cookie editor bookmarklet",
+  "description": "ABBA split test switcher bookmarklet",
   "main": "",
   "scripts": {
     "start": "./node_modules/http-server/bin/http-server -a localhost -p 8888",

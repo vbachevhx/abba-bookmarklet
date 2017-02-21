@@ -2,33 +2,33 @@
 (function() {
   var _container = null;
   // var _baseUrl = 'http://localhost:8080/';
-  var _baseUrl = 'https://rawgit.com/vbachev/js-cookie-editor/master/';
+  var _baseUrl = 'https://rawgit.com/vbachevhx/abba-bookmarklet/master/src/';
   var _cookiePrefix = 'abbaVariant_';
   var _tests = [];
   var _templates = {
     list: '' +
-      '<div class="ccc-popup">' +
-        '<div class="ccc-title">ABBA Editor</div>' +
-        '<ul class="ccc-list">{{items}}</ul>' +
+      '<div class="abba-popup">' +
+        '<div class="abba-title">ABBA Switcher</div>' +
+        '<ul class="abba-list">{{items}}</ul>' +
       '</div>',
 
     item: '' +
-      '<li class="ccc-item">' +
-        '<input class="ccc-toggle" type="radio" id="{{toggleId}}" name="ccc-toggle" />' +
-        '<label class="ccc-name" for="{{toggleId}}">{{name}}</label>' +
-        '<div class="ccc-contents">{{variants}}</div>' +
+      '<li class="abba-item">' +
+        '<input class="abba-toggle" type="radio" id="{{toggleId}}" name="abba-toggle" />' +
+        '<label class="abba-name" for="{{toggleId}}">{{name}}</label>' +
+        '<div class="abba-contents">{{variants}}</div>' +
       '</li>',
 
     variant: '' +
-      '<input type="radio" class="ccc-variant-radio" id="{{variantId}}" name="{{name}}" value="{{value}}" {{selected}} />' +
-      '<label class="ccc-variant" for={{variantId}}>' +
+      '<input type="radio" class="abba-variant-radio" id="{{variantId}}" name="{{name}}" value="{{value}}" {{selected}} />' +
+      '<label class="abba-variant" for={{variantId}}>' +
         '{{value}}' +
-        '<span class="ccc-weight">{{weight}}</span>' +
+        '<span class="abba-weight">{{weight}}</span>' +
       '</label>',
 
     noTests: '' +
-      '<li class="ccc-item">' +
-        '<label class="ccc-name">No ABBA tests on this page.</label>' +
+      '<li class="abba-item">' +
+        '<label class="abba-name">No ABBA tests on this page.</label>' +
       '</li>'
   };
 
@@ -36,13 +36,14 @@
     var tests = [];
     if (!window.hx || !hx.abba) return tests;
     for (var key in hx.abba._tests) {
+      var test = hx.abba._tests[key];
       tests.push({
         name: key,
-        variants: hx.abba._tests[key]._cachedAbba.variants.map(function(variant) {
+        variants: test._cachedAbba.variants.map(function(variant) {
           return {
             value: variant.name,
             weight: variant.weight,
-            chosen: hx.abba._tests[key]._cachedAbba.chosen.name == variant.name,
+            chosen: test._cachedAbba.chosen.name == variant.name,
             control: Boolean(variant.control)
           };
         })
@@ -68,7 +69,7 @@
 
   function createContainer() {
     _container = document.createElement('div');
-    _container.classList.add('ccc-wrapper');
+    _container.classList.add('abba-wrapper');
     _container.innerHTML = getContents();
     document.body.appendChild(_container);
   }
@@ -86,7 +87,7 @@
       itemsMarkup = _tests.reduce(function(markup, test, index) {
         var variantsMarkup = test.variants.reduce(function(vMarkup, variant, vIndex) {
           return vMarkup + parseTemplate(_templates.variant, {
-            variantId: 'cccItem' + index + 'v' + vIndex,
+            variantId: 'abbaItem' + index + 'v' + vIndex,
             name: test.name,
             value: variant.value,
             weight: '' + variant.weight + '%',
@@ -95,7 +96,7 @@
         }, '');
 
         return markup + parseTemplate(_templates.item, {
-          toggleId: 'cccItem' + index,
+          toggleId: 'abbaItem' + index,
           name: test.name,
           variants: variantsMarkup
         });
@@ -116,7 +117,7 @@
   	if (event.target === event.currentTarget) {
       // click on the container element (gray overlay)
   		destroy();
-  	} else if (event.target.classList.contains('ccc-variant')) {
+  	} else if (event.target.classList.contains('abba-variant')) {
       handleButtonClick(event.target);
     }
   }

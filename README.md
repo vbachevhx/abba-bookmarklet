@@ -1,26 +1,21 @@
-# Cookie editor for mobile and tablet devices
+# ABBA test switcher bookmarklet
 
-This is a simple and limited developer tool for editing cookies on smartphones and tablets. Distributed as a bookmarklet as this is the only way to have an external browser tool for Android and iOS browsers.
+This bookmarklet lets you switch between the variants of currently running ABBA split tests. Switching is done via editing split test cookie values. The bookmarklet reads split test data out of the `hx.abba._tests` object which is exposed on the `tripapp` platform of `holidayextras.co.uk`.
 
-## Limitations
+## Usage
 
-The tool uses the `document.cookie` getter/setter for all its interactions with cookies. This API is limited due to browser security reasons - e.g. much more limited than browser extensions.
+The tool opens a popup listing all currently active ABBA split tests. For each test there will be a list of it's possible variants, their names and weights. Clicking each variant will switch you over to that split test version - just refresh the page for the changes to take effect.
 
-Known limitations:
+![](https://i.gyazo.com/12a9d872a3dc8b741363ae1e2355c284.png)
 
-- It cannot read cookie data other than name and value (no way of knowing about its path, domain or expiration)
-- It cannot edit HttpOnly/secure cookies
-- When editing a cookie it's expiration will, by default, be changed to `session` - it will get deleted when the browser is closed
-- Editing/deleting may not work if the cookie's domain or path is not matched by the tool's command
+## Setup / Installation
 
-## Features
+### On desktop browsers
 
-- Appears as a modal overlay
-- Displays current cookies (name:value)
-- Deletes a cookie
-- Updates a cookie's value
-- :x: Advanced cookie data (domain, path, expiration, httpOnly)
-- :x: Create a new cookie
-- :x: Delete all cookies
-- :x: Full unicode support
-- :x: Path/domain based deleting?
+[Open the demo page](https://vbachevhx.github.io/abba-bookmarklet) and drag the bookmarklet link to your browser's bookmarks bar. Use it on any page by clicking the bookmark - it will load on top of the currently opened web-page.
+
+### On tablet and smartphone browsers
+
+[Open the demo page](https://vbachevhx.github.io/abba-bookmarklet), press and hold the bookmarklet link to open a context menu/popup. Copy the link address. Bookmark the page (exact wording may vary depending on OS) and edit the newly created bookmark and change the name to something searchable (e.g. `ABBA Switcher`) and paste the copied link address into the address field.
+
+To use it on a mobile/tablet device you need to have a web-page opened. Go to the browser's address bar and start typing `ABBA Switcher` - the auto-suggest feature will offer the bookmarklet - click it and it will load on your currently opened web-page.
