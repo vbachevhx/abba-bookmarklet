@@ -1,13 +1,14 @@
 'use strict';
 (function() {
   var _container = null;
-  // var _baseUrl = 'http://localhost:8888/';
-  var _baseUrl = 'https://rawgit.com/vbachevhx/js-cookie-editor/master/';
-  var _cookies = [];
+  // var _baseUrl = 'http://localhost:8080/';
+  var _baseUrl = 'https://rawgit.com/vbachev/js-cookie-editor/master/';
+  var _cookiePrefix = 'abbaVariant_';
+  var _tests = [];
   var _templates = {
     list: '' +
       '<div class="ccc-popup">' +
-        '<div class="ccc-title">Cookie Editor</div>' +
+        '<div class="ccc-title">ABBA Editor</div>' +
         '<ul class="ccc-list">{{items}}</ul>' +
       '</div>',
 
@@ -15,51 +16,47 @@
       '<li class="ccc-item">' +
         '<input class="ccc-toggle" type="radio" id="{{toggleId}}" name="ccc-toggle" />' +
         '<label class="ccc-name" for="{{toggleId}}">{{name}}</label>' +
-        '<div class="ccc-contents">' +
-          '<input class="ccc-value-input" value="{{value}}" name="{{name}}" />' +
-          '<button class="ccc-button ccc-update">Update</button>' +
-          '<button class="ccc-button ccc-delete">Delete</button>' +
-        '</div>' +
+        '<div class="ccc-contents">{{variants}}</div>' +
       '</li>',
 
-    noCookies: '' +
+    variant: '' +
+      '<input type="radio" class="ccc-variant-radio" id="{{variantId}}" name="{{name}}" value="{{value}}" {{selected}} />' +
+      '<label class="ccc-variant" for={{variantId}}>' +
+        '{{value}}' +
+        '<span class="ccc-weight">{{weight}}</span>' +
+      '</label>',
+
+    noTests: '' +
       '<li class="ccc-item">' +
-        '<label class="ccc-name">No cookies on this page.</label>' +
+        '<label class="ccc-name">No ABBA tests on this page.</label>' +
       '</li>'
   };
 
-  function getCookies() {
-    return document.cookie.split(';')
-      // return as {name, value} pairs
-      .map(function(record) {
-        var parts = record.trim().split('=');
-        return {
-          name: parts[0],
-          value: parts[1]
-        };
-      })
-      // skip empty items (e.g. when no cookies are found)
-      .filter(function(cookie){
-        return Boolean(cookie.name);
-      })
-      // sort alphabetically
-      .sort(function(a, b) {
-        return a.name > b.name;
+  function getTests() {
+    var tests = [];
+    if (!window.hx || !hx.abba) return tests;
+    for (var key in hx.abba._tests) {
+      tests.push({
+        name: key,
+        variants: hx.abba._tests[key]._cachedAbba.variants.map(function(variant) {
+          return {
+            value: variant.name,
+            weight: variant.weight,
+            chosen: hx.abba._tests[key]._cachedAbba.chosen.name == variant.name,
+            control: Boolean(variant.control)
+          };
+        })
       });
+    }
+    return tests;
   }
 
   function setCookie(name, value) {
-    document.cookie = name + '=' + value;
-  }
-
-  function deleteCookie(name) {
-    if(confirm('Will delete cookie named ' + name)){
-      document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    }
+    document.cookie = _cookiePrefix + encodeURIComponent(name) + '=' + encodeURIComponent(value);
   }
 
   function create() {
-    _cookies = getCookies();
+    _tests = getTests();
     createContainer();
     loadCSS();
   	_container.addEventListener('click', handleClick);
@@ -84,13 +81,23 @@
   }
 
   function getContents() {
-    var itemsMarkup = itemsMarkup = _templates.noCookies;
-    if (_cookies.length) {
-      itemsMarkup = _cookies.reduce(function(markup, cookie, index) {
+    var itemsMarkup = itemsMarkup = _templates.noTests;
+    if (_tests.length) {
+      itemsMarkup = _tests.reduce(function(markup, test, index) {
+        var variantsMarkup = test.variants.reduce(function(vMarkup, variant, vIndex) {
+          return vMarkup + parseTemplate(_templates.variant, {
+            variantId: 'cccItem' + index + 'v' + vIndex,
+            name: test.name,
+            value: variant.value,
+            weight: '' + variant.weight + '%',
+            selected: variant.chosen ? 'checked' : ''
+          });
+        }, '');
+
         return markup + parseTemplate(_templates.item, {
           toggleId: 'cccItem' + index,
-          name: cookie.name,
-          value: cookie.value
+          name: test.name,
+          variants: variantsMarkup
         });
       }, '');
     }
@@ -109,21 +116,14 @@
   	if (event.target === event.currentTarget) {
       // click on the container element (gray overlay)
   		destroy();
-  	} else if (event.target.classList.contains('ccc-button')) {
+  	} else if (event.target.classList.contains('ccc-variant')) {
       handleButtonClick(event.target);
     }
   }
 
   function handleButtonClick(button) {
-    var input = button.parentNode.querySelectorAll('.ccc-value-input')[0];
-    if (button.classList.contains('ccc-update')) {
-      // click on the Update button
-      setCookie(input.name, input.value);
-    } else if (button.classList.contains('ccc-delete')) {
-      // click on the Delete button
-      deleteCookie(input.name);
-    }
-    destroy();
+    var input = document.getElementById(button.getAttribute('for'));
+    setCookie(input.name, input.value);
   }
 
   create();
