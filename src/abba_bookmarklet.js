@@ -77,7 +77,7 @@
   function loadCSS() {
   	var styleTag = document.createElement('link');
   	styleTag.setAttribute('rel', 'stylesheet');
-  	styleTag.setAttribute('href', _baseUrl + 'cookie_bookmarklet.css');
+  	styleTag.setAttribute('href', _baseUrl + 'abba_bookmarklet.css');
   	_container.appendChild(styleTag);
   }
 
