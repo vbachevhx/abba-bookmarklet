@@ -1,7 +1,7 @@
 'use strict';
 (function() {
   var _container = null;
-  // var _baseUrl = 'http://localhost:8080/';
+  // var _baseUrl = 'http://localhost:8080/src/';
   var _baseUrl = 'https://rawgit.com/vbachevhx/abba-bookmarklet/master/src/';
   var _cookiePrefix = 'abbaVariant_';
   var _tests = [];
@@ -35,18 +35,40 @@
   function getTests() {
     var tests = [];
     if (!window.hx || !hx.abba) return tests;
+    
     for (var key in hx.abba._tests) {
       var test = hx.abba._tests[key];
+      var testVariantNames = [];
+      var testTotalWeight = 0;
+
+      // skip test if variants are empty
+      if (!test._cachedAbba.variants.length) continue;
+
       tests.push({
         name: key,
-        variants: test._cachedAbba.variants.map(function(variant) {
-          return {
-            value: variant.name,
-            weight: variant.weight,
-            chosen: test._cachedAbba.chosen.name == variant.name,
-            control: Boolean(variant.control)
-          };
-        })
+        variants: test._cachedAbba.variants
+          .reduce(function(list, variant) {
+            // keep track of variant names to avoid duplicates
+            if (testVariantNames.indexOf(variant.name) == -1) {
+              testVariantNames.push(variant.name);
+
+              // accumulate the total weight to calculate weight percentages
+              testTotalWeight += variant.weight;
+            
+              list.push({
+                value: variant.name,
+                weight: variant.weight,
+                chosen: test._cachedAbba.chosen.name == variant.name,
+                control: Boolean(variant.control)
+              });
+            }
+            return list;
+          }, [])
+          .map(function(variant) {
+            // transform weight ratio to percentage
+            variant.weight *= 100 / testTotalWeight;
+            return variant;
+          })
       });
     }
     return tests;
