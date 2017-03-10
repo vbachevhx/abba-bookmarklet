@@ -4,11 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>ABBA switcher demo</title>
+  <title>ABBA editor demo</title>
+  <link rel="stylesheet" href="dist/index.css">
 </head>
 <body>
+  <div class="wrapper">
+    <header>
+      <h1>Abba split test editor</h1>
+    </header>
 
-	<a href="javascript:(function(){var scriptTag = document.createElement('script');scriptTag.setAttribute('src', 'https://rawgit.com/vbachevhx/abba-bookmarklet/master/src/abba_bookmarklet.js');document.body.appendChild(scriptTag);})()">ABBA Switcher</a>
+    <section>
+      <p>
+        This bookmarklet lets you switch between the variants of currently running ABBA split-tests. Switching is done via editing the split-test cookie value.
+      </p>
+      <img class="demo" src="docs/abba-bookmarklet-demo.gif" alt="">
+    </section>
 
+    <section>
+      <h2>Install</h2>
+      <p>
+        To use this tool just click and drag the link below to your bookmarks bar:
+      </p>
+      <a id="bookmarkletLink" class="bookmarkletLink" href="#">ABBA Editor Bookmarklet</a>
+      <p>
+        For some browsers and devices you may need to:
+        <ul>
+          <li>Copy the link's address</li>
+          <li>Bookmark this page</li>
+          <li>Edit the newly created bookmark and paste the copied link address in the address bar</li>
+        </ul>
+      </p>
+    </section>
+
+    <section>
+      <h2>Usage</h2>
+      <p>
+        Just click the bookmarked link and it will start up on your currently open page.
+      </p>
+      <p>
+        The tool opens a popup listing all currently active ABBA split-tests. For each test there will be a list of possible variants, their names and weights. Clicking each variant will switch you over to that version - just refresh the page for the changes to take effect ;)
+      </p>
+      <p>
+        The bookmarklet reads split-test data out of the <i>hx.abba._tests</i> object which is exposed on the <i>tripapp</i> platform of <i>holidayextras.co.uk</i> (i.e. it'll only work there).
+      </p>
+    </section>
+    <footer>
+      <a href="https://github.com/vbachevhx/abba-bookmarklet" class="button">View on GitHub</a>
+    </footer>
+  </div>
+	<script src="dist/index.js"></script>
 </body>
 </html>

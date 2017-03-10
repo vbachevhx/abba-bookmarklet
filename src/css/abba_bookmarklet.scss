@@ -21,6 +21,9 @@
 	border: 1px solid #888;
   border-radius: 5px;
   overflow: hidden;
+
+  // show the overlay and popup when CSS is loaded
+  display: block!important;
 }
 
 .abba-title {

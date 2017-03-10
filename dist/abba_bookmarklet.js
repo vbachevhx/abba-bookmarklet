@@ -1,13 +1,13 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 (function() {
   var _container = null;
-  // var _baseUrl = 'http://localhost:8080/src/';
-  var _baseUrl = 'https://rawgit.com/vbachevhx/abba-bookmarklet/master/src/';
+  var _baseUrl = require('./config').url;
   var _cookiePrefix = 'abbaVariant_';
   var _tests = [];
   var _templates = {
     list: '' +
-      '<div class="abba-popup">' +
+      '<div class="abba-popup" style="display:none;">' +
         '<div class="abba-title">ABBA Switcher</div>' +
         '<ul class="abba-list">{{items}}</ul>' +
       '</div>',
@@ -35,7 +35,7 @@
   function getTests() {
     var tests = [];
     if (!window.hx || !hx.abba) return tests;
-    
+
     for (var key in hx.abba._tests) {
       var test = hx.abba._tests[key];
       var testVariantNames = [];
@@ -54,7 +54,7 @@
 
               // accumulate the total weight to calculate weight percentages
               testTotalWeight += variant.weight;
-            
+
               list.push({
                 value: variant.name,
                 weight: variant.weight,
@@ -89,7 +89,13 @@
     document.body.removeChild(_container);
   }
 
+  function destroyOtherInstances() {
+    var abbaWrapper = document.querySelector('.abba-wrapper');
+    if(abbaWrapper) document.body.removeChild(abbaWrapper);
+  }
+
   function createContainer() {
+    destroyOtherInstances();
     _container = document.createElement('div');
     _container.classList.add('abba-wrapper');
     _container.innerHTML = getContents();
@@ -151,3 +157,14 @@
 
   create();
 })();
+
+},{"./config":2}],2:[function(require,module,exports){
+module.exports = {
+
+	// pick between the local development url or the rawgit hosted 'production' url
+
+	url: 'http://localhost:9966/dist/'
+	// url: 'https://rawgit.com/vbachevhx/abba-bookmarklet/master/dist/'
+};
+
+},{}]},{},[1]);
