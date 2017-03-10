@@ -8,7 +8,7 @@
 	padding: 20px;
   font-family: monospace;
   font-size: 14px;
-  color: #333;
+  color: #444;
 	background: rgba(0,0,0,.3);
 	overflow: auto;
 }
@@ -21,6 +21,7 @@
 	border: 1px solid #888;
   border-radius: 5px;
   overflow: hidden;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
 
   // show the overlay and popup when CSS is loaded
   display: block!important;
@@ -38,6 +39,7 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
+  border-bottom: 1px solid #ddd;
 }
 
 .abba-item:hover {
@@ -98,4 +100,28 @@
 .abba-weight {
   float: right;
   font-style: italic;
+}
+
+.abba-reload-button {
+  display: none;
+  width: 50%;
+  margin: 10px auto;
+  padding: 10px 20px;
+  color: #ffffff;
+  background-color: #542e91;
+  border-color: #542e91;
+  border-radius: 3px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.abba-variant-changed .abba-reload-button {
+  display: block;
+}
+
+.abba-github-link {
+  display: block;
+  width: 50%;
+  margin: 10px auto;
+  text-align: center;
 }

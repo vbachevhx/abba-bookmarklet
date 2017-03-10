@@ -8,8 +8,10 @@
   var _templates = {
     list: '' +
       '<div class="abba-popup" style="display:none;">' +
-        '<div class="abba-title">ABBA Switcher</div>' +
+        '<div class="abba-title">ABBA Editor</div>' +
         '<ul class="abba-list">{{items}}</ul>' +
+        '<div id="abbaReloadButton" class="abba-reload-button">Reload page</div>' +
+        '<a href="https://github.com/vbachevhx/abba-bookmarklet" class="abba-github-link">View on GitHub</a>' +
       '</div>',
 
     item: '' +
@@ -146,13 +148,20 @@
       // click on the container element (gray overlay)
   		destroy();
   	} else if (event.target.classList.contains('abba-variant')) {
-      handleButtonClick(event.target);
+      handleVariantClick(event.target);
+    } else if (event.target.id === 'abbaReloadButton') {
+      reloadPage();
     }
   }
 
-  function handleButtonClick(button) {
+  function handleVariantClick(button) {
     var input = document.getElementById(button.getAttribute('for'));
     setCookie(input.name, input.value);
+    _container.classList.add('abba-variant-changed');
+  }
+
+  function reloadPage() {
+    window.location.reload();
   }
 
   create();
